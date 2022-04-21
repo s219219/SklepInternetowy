@@ -21,7 +21,6 @@ public class CreditCardTest {
         assertEquals(BigDecimal.valueOf(2000), card.getBalance());
     }
 
-    @Test
     void itAllowsToWithdrawSomeMoney() {
         //Arrange
         CreditCard card = new CreditCard();

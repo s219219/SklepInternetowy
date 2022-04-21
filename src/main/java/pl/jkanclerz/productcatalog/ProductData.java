@@ -39,4 +39,16 @@ public class ProductData {
     public boolean getPublished() {
         return online;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
 }

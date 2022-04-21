@@ -1,57 +1,54 @@
 package pl.jkanclerz.productcatalog;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ProductCatalog {
-    Map<String, ProductData> products;
+    ProductStorage productStorage;
 
-    public ProductCatalog() {
-        this.products = new HashMap<>();
+    public ProductCatalog(ProductStorage productStorage) {
+        this.productStorage = productStorage;
     }
 
     public List<ProductData> allPublishedProducts() {
-        return products.values()
-                .stream()
-                .filter(productData -> productData.getPublished())
-                .collect(Collectors.toList());
+        return productStorage.allPublishedProducts();
     }
 
     public String addProduct(String productKey, String name) {
         ProductData newProduct = new ProductData(productKey, name);
-        products.put(productKey, newProduct);
+        productStorage.save(newProduct);
+
         return productKey;
     }
 
     public void assignImage(String productId, String imagePath) {
-        ProductData loaded = getDetails(productId);
+        ProductData loaded = productStorage.load(productId);
         loaded.setImage(imagePath);
+        productStorage.save(loaded);
     }
 
     public ProductData getDetails(String productId) {
-        return products.get(productId);
+        return productStorage.load(productId);
     }
 
     public void publish(String productId) {
-        ProductData loaded = getDetails(productId);
+            ProductData loaded = productStorage.load(productId);
 
-        if (loaded.getImage() == null) {
-            throw new CantPublishProductException();
-        }
+            if (loaded.getImage() == null) {
+                throw new CantPublishProductException();
+            }
 
-        if (loaded.price() == null) {
-            throw new CantPublishProductException();
-        }
+            if (loaded.price() == null) {
+                throw new CantPublishProductException();
+            }
 
-        loaded.setPublished(true);
+            loaded.setPublished(true);
+            productStorage.save(loaded);
     }
 
     public void assignPrice(String productId, BigDecimal price) {
-        ProductData loaded = getDetails(productId);
+        ProductData loaded = productStorage.load(productId);
         loaded.setPrice(price);
+        productStorage.save(loaded);
     }
 }
